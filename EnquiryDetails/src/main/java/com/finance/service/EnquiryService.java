@@ -1,7 +1,7 @@
 package com.finance.service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import com.finance.model.Enquiry;
 
@@ -20,5 +20,7 @@ public interface EnquiryService {
 
 	
 	
+
+	public List<Enquiry> displayEnquiryDetails();
 
 }
