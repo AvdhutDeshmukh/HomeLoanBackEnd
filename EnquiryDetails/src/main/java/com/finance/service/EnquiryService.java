@@ -13,7 +13,7 @@ public interface EnquiryService {
 //
 //	public Optional<Enquiry> getEnquiryById(Long enquiryId);
 //
-//	public Enquiry updateEnquiry(Long enquiryId, Enquiry e);
+	public Enquiry updateEnquiry(Long enquiryId, Enquiry e);
 //
 //	public void deleteEnquiry(Long enquiryId);
 //	
