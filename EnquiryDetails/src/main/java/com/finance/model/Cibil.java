@@ -1,7 +1,7 @@
 package com.finance.model;
 
-import java.util.Date;
 
+import java.util.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +23,6 @@ public class Cibil
 		private Date cibilScoreDateTime;
 		private String cibilStatus;
 		private String cibilRemark;
+			
 		
-
 	}
