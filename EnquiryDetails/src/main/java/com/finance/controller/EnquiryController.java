@@ -1,14 +1,7 @@
 package com.finance.controller;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +17,22 @@ public class EnquiryController
 	{
 		@Autowired
 		EnquiryService enquiryService;
+
 	
 		//Created By Avdhut
 		@PostMapping("/save")
 		public ResponseEntity<Enquiry> saveEnquiry(@RequestBody Enquiry e)
 		{
-			Enquiry enq = enquiryService.saveEnquiry(e);
 
-	        return new ResponseEntity<>(enq, HttpStatus.CREATED);
-	        
+			enquiryService.saveEnquiry(e);
+		}
+		
+		@GetMapping("/display")
+		public ResponseEntity<List<Enquiry>>  displayEnquiryDetails()
+		{
+			List<Enquiry>  enquiry = enquiryService.displayEnquiryDetails();
+			return new ResponseEntity<List<Enquiry>>(enquiry,HttpStatus.OK);
+
 		}
 		
 	
