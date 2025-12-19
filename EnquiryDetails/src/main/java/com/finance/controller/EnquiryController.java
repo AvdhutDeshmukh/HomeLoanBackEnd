@@ -53,14 +53,14 @@ public class EnquiryController
 //			
 //		}
 //		
-//		@PutMapping("/update/{enquiryId}")
-//		public ResponseEntity<Enquiry> updateEnquiry(@PathVariable Long enquiryId,@RequestBody Enquiry e)
-//		{
-//			Enquiry update=enquiryService.updateEnquiry(enquiryId,e);
-//			
-//			return new ResponseEntity<>(update,HttpStatus.OK);
-//			
-//		}
+		@PutMapping("/update/{enquiryId}")
+		public ResponseEntity<Enquiry> updateEnquiry(@PathVariable Long enquiryId,@RequestBody Enquiry e)
+		{
+			Enquiry update=enquiryService.updateEnquiry(enquiryId,e);
+			
+			return new ResponseEntity<>(update,HttpStatus.OK);
+			
+		}
 //		
 //		@DeleteMapping("/delete/{enquiryId}")
 //		public ResponseEntity<Enquiry> deleteEnquiry(@PathVariable Long enquiryId)
