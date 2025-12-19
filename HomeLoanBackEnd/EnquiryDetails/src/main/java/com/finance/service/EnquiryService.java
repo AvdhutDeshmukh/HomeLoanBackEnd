@@ -1,13 +1,9 @@
 package com.finance.service;
 
-import java.util.List;
-
 import com.finance.model.Enquiry;
 
 public interface EnquiryService {
 
 	public void saveEnquiry(Enquiry e);
-
-	public List<Enquiry> displayEnquiryDetails();
 
 }
