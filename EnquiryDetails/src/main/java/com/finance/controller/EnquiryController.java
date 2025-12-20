@@ -43,7 +43,6 @@ public class EnquiryController
 			
 			emailService.sendEnquiryConfirmation(enquiry.getEmail(),enquiry.getFirstName(),enquiry.getLastName());
 			
-			
 			return new ResponseEntity<Enquiry>(enquiry,HttpStatus.CREATED);
 			
 		}
