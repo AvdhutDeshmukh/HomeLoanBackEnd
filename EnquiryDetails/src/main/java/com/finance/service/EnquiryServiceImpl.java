@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.finance.model.Cibil;
@@ -18,6 +20,9 @@ public class EnquiryServiceImpl implements EnquiryService
 		@Autowired
 		EnquiryRepository enquiryRepository;
 
+		@Autowired
+		JavaMailSender mailSender;
+		
 		@Override
 		public Enquiry saveEnquiry(Enquiry e) 
 		{
@@ -31,9 +36,9 @@ public class EnquiryServiceImpl implements EnquiryService
 	}
 		
 		@Override
-		public Enquiry updateEnquiry(Long enquiryId, Enquiry e) 
+		public Enquiry updateEnquiry(Long customerId, Enquiry e) 
 		{
-			Optional<Enquiry> op = enquiryRepository.findById(enquiryId);
+			Optional<Enquiry> op = enquiryRepository.findById(customerId);
 			
 			if(op.isPresent())
 			{
@@ -68,53 +73,92 @@ public class EnquiryServiceImpl implements EnquiryService
 		}
 		
 		@Override
-		public Enquiry getEnquiryById(Long enquiryId) 
+		public Enquiry getEnquiryById(Long customerId) 
 		{
-			return enquiryRepository.findById(enquiryId).orElseThrow();
+			return enquiryRepository.findById(customerId).orElseThrow();
 		}
 		
 		@Override
-		public void deleteEnquiry(Long enquiryId) 
+		public void deleteEnquiry(Long customerId) 
 		{
-			enquiryRepository.deleteById(enquiryId);		
+			enquiryRepository.deleteById(customerId);		
 		}
+		
 		@Override
-		public Enquiry updateCibil(Long enquiryId, Integer cibilScore) 
+		public Enquiry updateCibil(Long customerId, Integer cibilScore) 
 		{
-			Enquiry enquiry = enquiryRepository.findById(enquiryId).get();
-			
-			Cibil cibil = new Cibil();
-			cibil.setCibilScore(cibilScore);
-			cibil.setCibilScoreDateTime(new Date());
-			
-			if(cibilScore>=300 && cibilScore < 650)
-			{
-				cibil.setCibilStatus("Rejected");
-				cibil.setCibilRemark("Poor");
-			}
-			else if(cibilScore>=650 && cibilScore < 700)
-			{
-				cibil.setCibilStatus("Approved");
-				cibil.setCibilRemark("Fair");
-			}
-			else if(cibilScore>=700 && cibilScore < 750)
-			{
-				cibil.setCibilStatus("Approved");
-				cibil.setCibilRemark("Good");
-			}
-			else if(cibilScore>=750 && cibilScore <= 900)
-			{
-				cibil.setCibilStatus("Approved");
-				cibil.setCibilRemark("Excellent");
-			}
-			
-			enquiry.setCibil(cibil);
-			enquiryRepository.save(enquiry);
-			return enquiryRepository.save(enquiry);
-			
-			
+
+		    Enquiry enquiry = enquiryRepository.findById(customerId).orElseThrow();
+		    
+		    Cibil cibil = new Cibil();
+		    cibil.setCibilScore(cibilScore);
+		    cibil.setCibilScoreDateTime(new Date());
+
+		    if (cibilScore >= 300 && cibilScore < 650) 
+		    {
+		        cibil.setCibilStatus("Rejected");
+		        cibil.setCibilRemark("Poor");
+		        enquiry.setLoanStatus("REJECTED");
+		    }
+		    else if (cibilScore >= 650 && cibilScore < 700) 
+		    {
+		        cibil.setCibilStatus("Approved");
+		        cibil.setCibilRemark("Fair");
+		        enquiry.setLoanStatus("APPROVED");
+		        enquiry.setLoanStatus("FORWARD-TO-OE");;
+		    }
+		    else if (cibilScore >= 700 && cibilScore < 750) 
+		    {
+		        cibil.setCibilStatus("Approved");
+		        cibil.setCibilRemark("Good");
+		        enquiry.setLoanStatus("APPROVED");
+		        enquiry.setLoanStatus("FORWARD-TO-OE");
+		    }
+		    else if (cibilScore >= 750 && cibilScore <= 900) 
+		    {
+		        cibil.setCibilStatus("Approved");
+		        cibil.setCibilRemark("Excellent");
+		        enquiry.setLoanStatus("APPROVED");
+		        enquiry.setLoanStatus("FORWARD-TO-OE");
+		    }
+
+		    enquiry.setCibil(cibil);
+		    
+
+		    try {
+		    	
+		        SimpleMailMessage message = new SimpleMailMessage();
+		        message.setTo(enquiry.getEmail());
+		        message.setFrom("deshmukhavdhut756@gmail.com");
+		        message.setSubject("CIBIL Score Check");
+
+		        boolean approved = "Approved".equalsIgnoreCase(cibil.getCibilStatus());
+
+		        message.setText(
+		            "Dear " + enquiry.getFirstName() + " " + enquiry.getLastName() + ",\n\n" +
+		            "Your CIBIL score has been evaluated.\n\n" +
+		            "CIBIL Score: " + cibilScore + "\n" +
+		            "Status: " + cibil.getCibilStatus() + "\n" +
+		            "Remark: " + cibil.getCibilRemark() + "\n\n" +
+		            (approved
+		                ? "Congratulations! You are eligible for home loan processing."
+		                : "Unfortunately, you are currently not eligible for a home loan.") +
+		            "\n\nRegards,\nHome Loan Team"
+		        );
+
+		        mailSender.send(message);
+		    }
+		    catch (Exception e) {
+		        e.printStackTrace();
+		    }
+
+		    return enquiryRepository.save(enquiry);
 		}
+		
 		
 	
 		
-	}
+	
+}
+		
+	

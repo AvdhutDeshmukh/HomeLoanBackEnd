@@ -1,8 +1,8 @@
 package com.finance.controller;
 
-import java.util.Date;
+
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.finance.model.Cibil;
+
 import com.finance.model.Enquiry;
 import com.finance.service.EmailService;
 import com.finance.service.EnquiryService;
@@ -56,44 +56,57 @@ public class EnquiryController
 		}
 		
 	
-		@GetMapping("/{enquiryId}")
-		public ResponseEntity<Enquiry> getEnquiryById(@PathVariable Long enquiryId)
+		@GetMapping("/{customerId}")
+		public ResponseEntity<Enquiry> getEnquiryById(@PathVariable Long customerId)
 		{
-			Enquiry enquiry=enquiryService.getEnquiryById(enquiryId);
+			Enquiry enquiry=enquiryService.getEnquiryById(customerId);
 			
 			return new ResponseEntity<Enquiry>(enquiry,HttpStatus.OK);
 			
 		}
 		
-		@PutMapping("/update/{enquiryId}")
-		public ResponseEntity<Enquiry> updateEnquiry(@PathVariable ("enquiryId")Long enquiryId,@RequestBody Enquiry e)
+		@PutMapping("/update/{customerId}")
+		public ResponseEntity<Enquiry> updateEnquiry(@PathVariable ("customerId")Long customerId,@RequestBody Enquiry e)
 		{
-			Enquiry update=enquiryService.updateEnquiry(enquiryId,e);
+			Enquiry update=enquiryService.updateEnquiry(customerId,e);
 			
 			return new ResponseEntity<>(update,HttpStatus.OK);
 			
 		}
 		
-		@DeleteMapping("/delete/{enquiryId}")
-		public ResponseEntity<Enquiry> deleteEnquiry(@PathVariable ("enquiryId")Long enquiryId)
+		@DeleteMapping("/delete/{customerId}")
+		public ResponseEntity<Enquiry> deleteEnquiry(@PathVariable ("customerId")Long customerId)
 		{
-			enquiryService.deleteEnquiry(enquiryId);
+			enquiryService.deleteEnquiry(customerId);
 			
 			return new ResponseEntity<Enquiry> (HttpStatus.OK);
 			
 		}
 		
-		@GetMapping("/updatecibil/{enquiryId}")
-		public ResponseEntity<Enquiry> updateCibil(@PathVariable ("enquiryId")Long enquiryId)
+		@GetMapping("/updatecibil/{customerId}")
+		public ResponseEntity<Enquiry> updateCibil(@PathVariable ("customerId")Long customerId)
 		{
 			
 			Integer cibilScore = restTemplate.getForObject("http://localhost:2222/cibil", Integer.class);
 			System.out.println("CibilScore is: " + cibilScore);
 			
-			Enquiry enquiry = enquiryService.updateCibil(enquiryId,cibilScore);
+			Enquiry enquiry = enquiryService.updateCibil(customerId,cibilScore);
+	
+			String loanStatus = restTemplate.postForObject("http://localhost:2222/loanstatus", enquiry.getLoanStatus(), String.class);
+			
+			
 			return new ResponseEntity<Enquiry> (enquiry,HttpStatus.OK);
 			
+		
+		}
+		
+		
+		@GetMapping("/approved/{customerId}")
+		public ResponseEntity<Enquiry> getApprovedEnquiry(@PathVariable Long customerId)
+		{
+			Enquiry enquiry = enquiryService.getEnquiryById(customerId);
 			
+			return new ResponseEntity<Enquiry>(enquiry,HttpStatus.OK);
 		}
 		
 	}

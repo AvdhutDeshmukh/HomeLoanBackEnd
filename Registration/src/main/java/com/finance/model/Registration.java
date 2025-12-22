@@ -1,6 +1,5 @@
 package com.finance.model;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,16 +10,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Entity
-public class Enquiry 
+public class Registration 
 	{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long customerId;
-		
+		private String customerDateOfBirth;
+		private Integer requiredTenure;
+		private double customerAdditionalMobileNumber;
+		private double customerAmountPaidForHome;
+		private double customerTotalLoanRequired;
 		private String firstName;
 		private String lastName;
 		private Integer age;
@@ -30,13 +33,9 @@ public class Enquiry
 		private String aadharNo;
 		private String panNo;
 		private String employeeType;
-		
-		
-		@OneToOne(cascade = CascadeType.ALL)
-		private Cibil cibil;	
-		
 		private String loanStatus;
-		
-		
 
+//		@OneToOne(cascade = CascadeType.ALL)
+//		private AllPersonalDocuments allpersonalDocument;
+		
 	}
