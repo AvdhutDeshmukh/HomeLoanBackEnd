@@ -11,12 +11,13 @@ public interface EnquiryService {
 
 	public List<Enquiry> displayEnquiryDetails();
 
-	public Enquiry getEnquiryById(Long enquiryId);
+	public Enquiry getEnquiryById(Long customerId);
 	
-	public Enquiry updateEnquiry(Long enquiryId, Enquiry e);
+	public Enquiry updateEnquiry(Long customerId, Enquiry e);
 
-	public void deleteEnquiry(Long enquiryId);
+	public void deleteEnquiry(Long customerId);
 
-	public Enquiry updateCibil(Long enquiryId, Integer cibilScore);
+	public Enquiry updateCibil(Long customerId, Integer cibilScore);
+
 
 	}
